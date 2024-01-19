@@ -1,12 +1,16 @@
 package com.myproject.assertions;
 
-import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
+import static java.lang.String.valueOf;
+import static java.lang.System.lineSeparator;
 
 @Slf4j
 public class CustomAssertions {
@@ -22,9 +26,41 @@ public class CustomAssertions {
         try {
             MatcherAssert.assertThat(fullMessage, actual, matcher);
             log.info(logMessage);
-        }catch (AssertionError error){
+        } catch (AssertionError error) {
             log.error(logMessage);
             throw new AssertionError(error.getMessage());
         }
+    }
+
+    public static void assertTrue(final String message, final boolean condition) {
+        final String fullMessage = ASSERT_THAT + message;
+        final String logMessage = getAssertionExpectedActualMessage(fullMessage, TRUE, condition);
+        try {
+            Assertions.assertTrue(condition, fullMessage);
+            log.info(logMessage);
+        } catch (AssertionError error) {
+            log.error(logMessage);
+            throw new AssertionError(error.getMessage());
+        }
+    }
+
+    public static void assertFalse(final String message, final boolean condition) {
+        final String fullMessage = ASSERT_THAT + message;
+        final String logMessage = getAssertionExpectedActualMessage(fullMessage, TRUE, condition);
+        try {
+            Assertions.assertFalse(condition, message);
+            logger.info(logMessage);
+        } catch (AssertionError error) {
+            logger.error(logMessage);
+            throw new AssertionError(error.getMessage());
+        }
+    }
+
+    public static String getAssertionExpectedActualMessage(final String fullMessage, final String expected, final String actual){
+        return format(ASSERTION_EXPECTED_ACTUAL_MESSAGE, fullMessage, expected, actual, lineSeparator());
+    }
+
+    public static <T> String getAssertionExpectedActualMessage(final String fullMessage, final T expected, final T actual) {
+        return getAssertionExpectedActualMessage(fullMessage, valueOf(expected), valueOf(actual));
     }
 }
