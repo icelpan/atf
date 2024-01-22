@@ -11,6 +11,7 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <maven-failsafe.version>3.0.0-M5</maven-failsafe.version>
         <cucumber.version>7.4.1</cucumber.version>
         <spring-boot.version>3.1.4</spring-boot.version>
         <rest-assured.version>5.1.1</rest-assured.version>
@@ -197,4 +198,48 @@
             <version>2.4.8</version>
         </dependency>
     </dependencies>
+    <profiles>
+        <profile>
+            <id>run-e2e-tests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>${maven-failsafe.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                                <configuration>
+                                    <argLine>
+                                        -Denv=local
+                                    </argLine>
+                                    <includes>
+                                        com.myproject.runner.RunCucumberTest
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+                            <properties>
+                                <property>
+                                    <name>listener</name>
+                                    <value>io.qameta.allure.junit5.AllureJunit5</value>
+                                </property>
+                            </properties>
+                            <systemProperties>
+                                <property>
+                                    <name>allure.results.directory</name>
+                                    <value>${project.build.directory}/allure-results</value>
+                                </property>
+                            </systemProperties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
