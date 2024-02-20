@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Пример HTML-страницы</title>
+<style>
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+form {
+  text-align: center;
+}
+
+label {
+  font-weight: bold;
+}
+
+input {
+  margin-bottom: 10px;
+}
+
+#clock {
+display: none;
+text-align: center;
+font-size: 24px;
+margin-top: 20px;
+font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<form>
+<label for="field1">Поле 1:</label>
+<br>
+<input type="text" id="field1" name="field1" maxlength="30" required>
+<br>
+
+<label for="field2">Поле 2:</label>
+<br>
+<input type="text" id="field2" name="field2" maxlength="30" required>
+<br>
+
+<input type="button" value="Отправить" onclick="showClock()">
+</form>
+
+<div id="clock">Текущее время: <span id="current-time"></span></div>
+
+<script>
+function showClock() {
+var clock = document.getElementById('clock');
+var currentTime = document.getElementById('current-time');
+var now = new Date();
+var hours = now.getHours();
+var minutes = now.getMinutes();
+var seconds = now.getSeconds();
+
+currentTime.textContent = `${hours}:${minutes}:${seconds}`;
+clock.style.display = 'block';
+
+// Добавляем простую анимацию с использованием opacity
+var opacity = 0;
+var fadeInInterval = setInterval(function() {
+if (opacity < 1) {
+opacity += 0.1;
+clock.style.opacity = opacity;
+} else {
+clearInterval(fadeInInterval);
+}
+}, 100);
+}
+</script>
+
+</body>
+</html>

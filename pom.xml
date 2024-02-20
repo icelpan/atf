@@ -6,22 +6,38 @@
 
     <groupId>org.example</groupId>
     <artifactId>ATF</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+
+
         <maven-failsafe.version>3.0.0-M5</maven-failsafe.version>
-        <cucumber.version>7.4.1</cucumber.version>
+        <maven-surefire.version>3.0.0-M5</maven-surefire.version>
+
         <spring-boot.version>3.1.4</spring-boot.version>
-        <rest-assured.version>5.1.1</rest-assured.version>
-        <lombok.version>1.18.24</lombok.version>
-        <junit.version>5.9.1</junit.version>
+        <cucumber.version>7.11.1</cucumber.version>
+        <rest-assured.version>5.3.0</rest-assured.version>
+        <junit-platform.version></junit-platform.version>
+        <junit.version>5.9.2</junit.version>
+        <junit-vintage.version>5.9.2</junit-vintage.version>
+        <maven-compiler-plugin.version></maven-compiler-plugin.version>
+        <lombok.version>1.18.26</lombok.version>
+        <swagger-request-validator-restassured.version></swagger-request-validator-restassured.version>
         <selenium.version>4.8.3</selenium.version>
+        <common-io.version></common-io.version>
+        <guava.version></guava.version>
         <jackson.datatype.jsr310.version>2.15.2</jackson.datatype.jsr310.version>
-        <junit-vintage.version>5.9.1</junit-vintage.version>
 
     </properties>
+
+    <modules>
+        <module>celpan-wiremock</module>
+        <module>celpan-testing-part</module>
+    </modules>
+
     <dependencies>
         <dependency>
             <groupId>io.cucumber</groupId>
@@ -45,6 +61,11 @@
                     <artifactId>spring-test</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-jre8</artifactId>
+            <version>2.35.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -153,7 +174,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>5.3.20</version>
+            <version>6.0.6</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
@@ -184,7 +205,7 @@
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
-            <version>4.2.1</version>
+            <version>4.3.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
@@ -204,8 +225,9 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>${maven-failsafe.version}</version>
+                        <version>${maven-surefire.version}</version>
                         <executions>
                             <execution>
                                 <goals>
