@@ -6,20 +6,38 @@
 
     <groupId>org.example</groupId>
     <artifactId>ATF</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <cucumber.version>7.4.1</cucumber.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+
+
+        <maven-failsafe.version>3.0.0-M5</maven-failsafe.version>
+        <maven-surefire.version>3.0.0-M5</maven-surefire.version>
+
         <spring-boot.version>3.1.4</spring-boot.version>
-        <rest-assured.version>5.1.1</rest-assured.version>
-        <lombok.version>1.18.24</lombok.version>
-        <junit.version>5.9.1</junit.version>
+        <cucumber.version>7.11.1</cucumber.version>
+        <rest-assured.version>5.3.0</rest-assured.version>
+        <junit-platform.version></junit-platform.version>
+        <junit.version>5.9.2</junit.version>
+        <junit-vintage.version>5.9.2</junit-vintage.version>
+        <maven-compiler-plugin.version></maven-compiler-plugin.version>
+        <lombok.version>1.18.26</lombok.version>
+        <swagger-request-validator-restassured.version></swagger-request-validator-restassured.version>
         <selenium.version>4.8.3</selenium.version>
+        <common-io.version></common-io.version>
+        <guava.version></guava.version>
         <jackson.datatype.jsr310.version>2.15.2</jackson.datatype.jsr310.version>
 
     </properties>
+
+    <modules>
+        <module>celpan-wiremock</module>
+        <module>celpan-testing-part</module>
+    </modules>
+
     <dependencies>
         <dependency>
             <groupId>io.cucumber</groupId>
@@ -43,6 +61,11 @@
                     <artifactId>spring-test</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-jre8</artifactId>
+            <version>2.35.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -148,5 +171,97 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>6.0.6</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit-vintage.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.junit.platform</groupId>
+                    <artifactId>junit-platform-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.3.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.infomaximum</groupId>
+            <artifactId>json-smart</artifactId>
+            <version>2.4.8</version>
+        </dependency>
     </dependencies>
+    <profiles>
+        <profile>
+            <id>run-e2e-tests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>${maven-surefire.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                                <configuration>
+                                    <argLine>
+                                        -Denv=local
+                                    </argLine>
+                                    <includes>
+                                        com.myproject.runner.RunCucumberTest
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+                            <properties>
+                                <property>
+                                    <name>listener</name>
+                                    <value>io.qameta.allure.junit5.AllureJunit5</value>
+                                </property>
+                            </properties>
+                            <systemProperties>
+                                <property>
+                                    <name>allure.results.directory</name>
+                                    <value>${project.build.directory}/allure-results</value>
+                                </property>
+                            </systemProperties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
